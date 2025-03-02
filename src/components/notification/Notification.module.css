@@ -1,0 +1,26 @@
+.notificationText {
+  margin-left: auto;
+  margin-right: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 200px;
+  height: 50px;
+  background-color: rgb(148, 113, 86);
+  border-radius: 10px;
+  box-shadow: 9px 10px 0px 0px rgb(64, 56, 49);
+  transition: box-shadow 200ms linear, transform 200ms linear;
+}
+
+.notificationText:hover {
+  box-shadow: 0px 0px 0px 0px rgb(64, 56, 49);
+  transform: scale(1.05);
+}
+
+.feedbackIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
