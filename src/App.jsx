@@ -1,81 +1,62 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import Description from "./components/Description/Description";
+import Options from "./components/Options/Options";
+import Feedback from "./components/Feedback/Feedback";
+import Notification from "./components/Notification/Notification";
 
-import Description from "./components/description/Description";
-import Options from "./components/options/Options";
-import Feedback from "./components/feedback/Feedback";
-import Notification from "./components/notification/Notification";
-import Cafe from "./components/cafe/Cafe";
-import { AnimatePresence } from "framer-motion";
-
-function App() {
-  const [feedbackData, setFeedbackData] = useState(() => {
-    const feedbackDataFromLS = JSON.parse(
-      localStorage.getItem("FeedbackDataKey")
-    );
-
-    if (feedbackDataFromLS !== null) {
-      return feedbackDataFromLS;
-    }
-
-    return {
-      good: 0,
-      neutral: 0,
-      bad: 0,
-    };
+const App = () => {
+  const [feedback, setFeedback] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0,
   });
 
-  const updateFeedback = (feedbackType) => {
-    setFeedbackData({
-      ...feedbackData,
-      [feedbackType]: feedbackData[feedbackType] + 1,
-    });
-  };
-
-  const resetFeedback = () => {
-    localStorage.removeItem("FeedbackDataKey");
-    setFeedbackData({
-      good: 0,
-      neutral: 0,
-      bad: 0,
-    });
-  };
-
-  const totalFeedback =
-    feedbackData.good + feedbackData.neutral + feedbackData.bad;
-  const positiveFeedback = Math.round(
-    (feedbackData.good / (totalFeedback - feedbackData.neutral)) * 100
-  );
-
   useEffect(() => {
-    if (totalFeedback === 0) {
-      return;
+    const savedFeedback = JSON.parse(localStorage.getItem("feedback"));
+    if (savedFeedback) {
+      setFeedback(savedFeedback);
     }
+  }, []);
+  useEffect(() => {
+    if (feedback) {
+      localStorage.setItem("feedback", JSON.stringify(feedback));
+    }
+  }, [feedback]);
 
-    localStorage.setItem("FeedbackDataKey", JSON.stringify(feedbackData));
-  }, [feedbackData]);
+  const onLeaveFeedback = (option) => {
+    setFeedback((prevFeedback) => ({
+      ...prevFeedback,
+      [option]: prevFeedback[option] + 1,
+    }));
+  };
+  const handleReset = () => {
+    setFeedback({ good: 0, neutral: 0, bad: 0 });
+    localStorage.removeItem("feedback");
+  };
+  const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
+  const positiveFeedback =
+    totalFeedback > 0 ? Math.round((feedback.good / totalFeedback) * 100) : 0;
 
   return (
-    <div className="container">
+    <div className="App">
       <Description />
       <Options
-        updateFeedback={updateFeedback}
-        resetFeedback={resetFeedback}
+        onLeaveFeedback={onLeaveFeedback}
         totalFeedback={totalFeedback}
-        dataObj={feedbackData}
+        onReset={handleReset}
       />
-      <Cafe />
       {totalFeedback > 0 ? (
         <Feedback
-          dataObj={feedbackData}
-          totalFeedback={totalFeedback}
+          feedback={feedback}
           positiveFeedback={positiveFeedback}
+          totalFeedback={totalFeedback}
         />
       ) : (
         <Notification />
       )}
     </div>
   );
-}
+};
 
 export default App;

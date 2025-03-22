@@ -1,7 +1,8 @@
-# Віджет відгуків
+# React + Vite
 
-Застосунок для збору відгуків про кав'ярню Sip Happens Café.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Опис
+Currently, two official plugins are available:
 
-Застосунок відображає кількість зібраних відгуків для кожної категорії: good, neutral, bad. Статистика відгуків зберігається між оновленням сторінки.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
