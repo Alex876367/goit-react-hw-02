@@ -1,18 +1,13 @@
-import PropTypes from "prop-types";
-import css from "./Options.module.css";
-const Options = ({ onLeaveFeedback, totalFeedback, onReset }) => {
+export default function Options({ onUpdate, total, resetReviews, keys }) {
   return (
-    <div className={css.btnOptions}>
-      <button onClick={() => onLeaveFeedback("good")}>Good</button>
-      <button onClick={() => onLeaveFeedback("neutral")}>Neutral</button>
-      <button onClick={() => onLeaveFeedback("bad")}>Bad</button>
+    <div>
+      <button onClick={() => onUpdate(keys.good)}>Good</button>
 
-      {totalFeedback > 0 && <button onClick={onReset}>Reset</button>}
+      <button onClick={() => onUpdate(keys.neutral)}>Neutral</button>
+
+      <button onClick={() => onUpdate(keys.bad)}>Bad</button>
+
+      {total === 0 || <button onClick={resetReviews}>Reset</button>}
     </div>
   );
-};
-Options.propTypes = {
-  onLeaveFeedback: PropTypes.func.isRequired,
-  totalFeedback: PropTypes.number.isRequired,
-};
-export default Options;
+}

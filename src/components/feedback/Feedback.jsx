@@ -1,25 +1,15 @@
-import PropTypes from 'prop-types';
-const Feedback = ({ feedback, positiveFeedback, totalFeedback }) => {
+export default function Feedback({
+  feedbacks: { good, neutral, bad },
+  total,
+  positive
+}) {
   return (
     <div>
-      <p>Good: {feedback.good}</p>
-      <p>Neutral: {feedback.neutral}</p>
-      <p>Bad: {feedback.bad}</p>
-      <p>Total: {totalFeedback}</p>
-      <p>Positive: {positiveFeedback}%</p>
+      <p>Good: {good}</p>
+      <p>Neutral: {neutral}</p>
+      <p>Bad: {bad}</p>
+      <p>Total: {total}</p>
+      <p>Positive: {positive}%</p>
     </div>
   );
-};
-  Feedback.propTypes = {
-    feedback: PropTypes.shape({
-      good: PropTypes.number.isRequired,
-      neutral: PropTypes.number.isRequired,
-      bad: PropTypes.number.isRequired,
-    }).isRequired,
-    positiveFeedback: PropTypes.number.isRequired,
-    totalFeedback: PropTypes.number.isRequired,
-  };
-  
-  
-  
-  export default Feedback;
+}

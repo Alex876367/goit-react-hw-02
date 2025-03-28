@@ -1,62 +1,65 @@
 import { useState, useEffect } from "react";
-import "./App.css";
-import Description from "./components/Description/Description";
-import Options from "./components/Options/Options";
-import Feedback from "./components/Feedback/Feedback";
-import Notification from "./components/Notification/Notification";
 
-const App = () => {
-  const [feedback, setFeedback] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
+import Description from "./components/description/Description";
+import Options from "./components/options/Options";
+import Feedback from "./components/feedback/Feedback";
+
+import "./App.css";
+import Notification from "./components/notification/Notification";
+
+const KEYS = {
+  good: "good",
+  neutral: "neutral",
+  bad: "bad",
+  lsReviews: "reviews"
+};
+
+const defaultReviews = {
+  [KEYS.good]: 0,
+  [KEYS.neutral]: 0,
+  [KEYS.bad]: 0
+};
+
+function App() {
+  const [reviews, setReviews] = useState(() => {
+    const localData = JSON.parse(localStorage.getItem(KEYS.lsReviews));
+    return localData || defaultReviews;
   });
 
   useEffect(() => {
-    const savedFeedback = JSON.parse(localStorage.getItem("feedback"));
-    if (savedFeedback) {
-      setFeedback(savedFeedback);
-    }
-  }, []);
-  useEffect(() => {
-    if (feedback) {
-      localStorage.setItem("feedback", JSON.stringify(feedback));
-    }
-  }, [feedback]);
+    localStorage.setItem(KEYS.lsReviews, JSON.stringify(reviews));
+  }, [reviews]);
 
-  const onLeaveFeedback = (option) => {
-    setFeedback((prevFeedback) => ({
-      ...prevFeedback,
-      [option]: prevFeedback[option] + 1,
-    }));
+  const totalFeedback = reviews.good + reviews.neutral + reviews.bad;
+  const positiveFeedback = Math.round((reviews.good / totalFeedback) * 100);
+
+  const updateFeedback = (feedbackType) =>
+    setReviews({ ...reviews, [feedbackType]: reviews[feedbackType] + 1 });
+
+  const resetFeedback = () => {
+    setReviews(defaultReviews);
   };
-  const handleReset = () => {
-    setFeedback({ good: 0, neutral: 0, bad: 0 });
-    localStorage.removeItem("feedback");
-  };
-  const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
-  const positiveFeedback =
-    totalFeedback > 0 ? Math.round((feedback.good / totalFeedback) * 100) : 0;
 
   return (
-    <div className="App">
+    <>
       <Description />
       <Options
-        onLeaveFeedback={onLeaveFeedback}
-        totalFeedback={totalFeedback}
-        onReset={handleReset}
+        onUpdate={updateFeedback}
+        total={totalFeedback}
+        resetReviews={resetFeedback}
+        keys={KEYS}
       />
-      {totalFeedback > 0 ? (
-        <Feedback
-          feedback={feedback}
-          positiveFeedback={positiveFeedback}
-          totalFeedback={totalFeedback}
-        />
-      ) : (
+      {totalFeedback === 0 ? (
         <Notification />
+      ) : (
+        <Feedback
+          feedbacks={reviews}
+          total={totalFeedback}
+          positive={positiveFeedback}
+        />
       )}
-    </div>
+    </>
   );
-};
+}
 
 export default App;

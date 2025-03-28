@@ -1,13 +1,11 @@
-import css from "./Description.module.css";
-const Description = () => {
+export default function Description() {
   return (
-    <>
-      <h1 className={css.titleDescription}>Sip Happens Café</h1>
-      <p className={css.textDescription}>
+    <div>
+      <h1>Sip Happens Café</h1>
+      <p>
         Please leave your feedback about our service by selecting one of the
         options below.
       </p>
-    </>
+    </div>
   );
-};
-export default Description;
+}
